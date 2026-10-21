@@ -1,0 +1,26 @@
+name: sync to Hugging Face Space
+
+# After the ci workflow succeeds on main, push this repository to the Space,
+# which then rebuilds the Docker image. Needs a repository secret HF_TOKEN
+# (a Hugging Face access token with write access to the Space).
+on:
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  sync:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Push to the Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          test -n "$HF_TOKEN" || { echo "HF_TOKEN secret is not set"; exit 1; }
+          git push --force "https://Qazihanif:${HF_TOKEN}@huggingface.co/spaces/Qazihanif/pir-demo" HEAD:main

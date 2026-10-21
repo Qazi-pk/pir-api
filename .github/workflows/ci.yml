@@ -25,5 +25,10 @@ jobs:
       - name: Start container and check /health
         run: |
           docker run -d -p 8000:8000 --name api pir-api
-          for i in $(seq 1 30); do curl -sf localhost:8000/health && exit 0; sleep 2; done
-          docker logs api; exit 1
+          for i in $(seq 1 30); do curl -sf localhost:8000/health && break; sleep 2; done
+          curl -sf localhost:8000/health || { docker logs api; exit 1; }
+      - name: Fit an example inside the container (non-root user)
+        run: |
+          curl -sf localhost:8000/examples/lens.csv -o lens.csv
+          curl -sf -F file=@lens.csv -F target=focal_cm localhost:8000/fit | tee fit.json
+          grep -q '"found_by":"rational"' fit.json || { docker logs api; exit 1; }

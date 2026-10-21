@@ -1,3 +1,15 @@
+---
+title: PIR formula finder
+emoji: 🔬
+colorFrom: blue
+colorTo: gray
+sdk: docker
+app_port: 8000
+pinned: false
+license: mit
+short_description: Find a closed-form formula in a CSV with PIR 3.6.0
+---
+
 # pir-api
 
 A small web service around [PIR](https://github.com/Qazi-pk/physics-engine), an open-source
