@@ -23,6 +23,10 @@ uvicorn app.main:app --port 8000
 
 Then open <http://localhost:8000> for the upload page, or <http://localhost:8000/docs> for the API.
 
+The page reads the column names from your file and lets you pick the one to explain; every other
+column is used as an input. Four example buttons (pendulum, thin lens, gravity, radioactive decay)
+load made-up data generated from a known law, so you can see what a correct answer looks like.
+
 ## API
 
 `POST /fit` — multipart form:
@@ -40,9 +44,13 @@ curl -F file=@data.csv -F target=QT http://localhost:8000/fit
 Example response (QT interval vs RR interval, synthetic data):
 
 ```json
-{"formula": "420.04*RR**(1/3)", "found_by": "noisy", "r2_heldout_rows": 0.9616,
+{"formula": "420.043*RR**(1/3)", "found_by": "noisy", "r2_heldout_rows": 0.9616,
  "rows_used": 2000, "fit_seconds": 2.3, "pir_engine": "3.6.0"}
 ```
+
+`formula` has constants rounded to 6 significant figures; `formula_full_precision` is the unrounded model.
+
+`GET /examples/{name}.csv` returns an example table (`pendulum`, `lens`, `gravity`, `decay`).
 
 `GET /health` returns the service and engine versions.
 
