@@ -1,0 +1,6 @@
+pir-engine @ git+https://github.com/Qazi-pk/physics-engine.git@v3.6.0
+fastapi>=0.110
+uvicorn>=0.29
+python-multipart>=0.0.9
+pandas>=2.0
+numpy>=1.23
